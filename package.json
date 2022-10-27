@@ -1,0 +1,15 @@
+{
+  "name": "stamps",
+  "version": "0.0.0",
+  "description": "",
+  "author": {
+    "name": "Zebreus",
+    "email": "lennarteichhorn@googlemail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zebreus/stamps"
+  },
+  "license": "MIT",
+  "type": "module"
+}
