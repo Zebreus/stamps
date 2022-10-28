@@ -1,17 +1,28 @@
-import { css } from "@emotion/react"
-import { useToggle } from "hooks/useToggle"
+import { useMold } from "functions/useMold"
+import dynamic from "next/dynamic"
+
+const Renderer = dynamic(
+  () => import("jscad-react").then(mod => mod.Renderer),
+  {
+    ssr: false,
+  }
+)
 
 export const Demo = () => {
-  const [state, toggle] = useToggle()
+  const solids = [useMold()]
 
   return (
-    <button
-      onClick={toggle}
-      css={css`
-        background-color: ${state ? "red" : "blue"};
-      `}
-    >
-      Click to toggle color
-    </button>
+    <div>
+      <Renderer
+        animate={true}
+        solids={solids}
+        height={500}
+        width={500}
+        options={{
+          gridOptions: { show: true, ticks: [10] },
+          axisOptions: { show: true },
+        }}
+      />
+    </div>
   )
 }
