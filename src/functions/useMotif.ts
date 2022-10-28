@@ -68,7 +68,7 @@ export const useMotif = ({
   clipBottom = 0.49,
   clipTop = 0.51,
 }: Options = {}) => {
-  const data = useHeightMap(url, [100, 100])
+  const data = useHeightMap(url, [150, 150])
 
   if (clipBottom > clipTop) {
     throw new Error("clipBottom must be lower than clipTop")
@@ -111,15 +111,6 @@ export const useMotif = ({
       )
     )
 
-    console.log(
-      "calc",
-      clipBottom,
-      clipTop,
-      data,
-      depth,
-      unclippedHeight,
-      width
-    )
     return translate([0, 0, -height / 2], subtract(mysurface, cutCube))
   }, [clipBottom, clipTop, data, depth, unclippedHeight, width, height])
 

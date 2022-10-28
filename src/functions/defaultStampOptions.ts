@@ -7,6 +7,12 @@ export type StampOptions = {
   handleRadius?: number
   /** Bevel radius of the handle pyramid */
   baseBevel?: number
+  /** Curvature of the handle */
+  handleExponent?: number
+  /** Height of the stamp holder */
+  holderHeight?: number
+  /** Radius of the stamp holder */
+  holderRadius?: number
 
   // Horizontal measurements, ordered from outside to inside
   /** Thickness of the mold holder walls */
@@ -55,7 +61,10 @@ export const getDefaultStampOptions = (options: Partial<StampOptions>) => {
     url: "/qr.png",
     interfaceMargin: 1,
     handleRadius: 10,
+    handleExponent: 1.3,
     baseBevel: 2,
+    holderHeight: 40,
+    holderRadius: 1.7,
     holderWallSize: 3,
     tolerance: 0.1,
     moldWallThickness: 2,
