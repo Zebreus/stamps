@@ -13,6 +13,8 @@ export type StampOptions = {
   holderHeight?: number
   /** Radius of the stamp holder */
   holderRadius?: number
+  /** How much bigger then the base the pyramid is */
+  pyramidOversize?: number
 
   // Horizontal measurements, ordered from outside to inside
   /** Thickness of the mold holder walls */
@@ -65,6 +67,7 @@ export const getDefaultStampOptions = (options: Partial<StampOptions>) => {
     baseBevel: 2,
     holderHeight: 40,
     holderRadius: 1.7,
+    pyramidOversize: 1,
     holderWallSize: 3,
     tolerance: 0.1,
     moldWallThickness: 2,

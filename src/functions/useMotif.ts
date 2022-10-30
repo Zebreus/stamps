@@ -1,13 +1,9 @@
 import { Geom3 } from "@jscad/modeling/src/geometries/types"
 import { Vec3 } from "@jscad/modeling/src/maths/types"
-import { subtract, union } from "@jscad/modeling/src/operations/booleans"
-import { translate } from "@jscad/modeling/src/operations/transforms"
-import { cuboid } from "@jscad/modeling/src/primitives"
-//@ts-expect-error: no types available
-import { extrudeSurface } from "jscad-surface"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { GenerateMotifMessage } from "workers/motif.worker"
 
-const useHeightMap = (url: string, maxSize: [number, number]) => {
+export const useHeightMap = (url: string, maxSize: [number, number]) => {
   const [heightMap, setHeightMap] = useState<{
     width: number
     length: number
@@ -62,57 +58,31 @@ type Options = {
   clipBottom?: number
 }
 
-export const useMotif = ({
-  url = "/qr.png",
-  size = [40, 40, 1],
-  clipBottom = 0.49,
-  clipTop = 0.51,
-}: Options = {}) => {
-  const data = useHeightMap(url, [150, 150])
+export const useMotif = (options: Options = {}) => {
+  const heightMap = useHeightMap(options.url ?? "/qr.png", [150, 150])
 
-  if (clipBottom > clipTop) {
-    throw new Error("clipBottom must be lower than clipTop")
-  }
+  const [motif, setMotif] = useState<Geom3>()
+  const workerRef = useRef<Worker>()
 
-  const [width, depth, height] = size
-
-  const clippedHeight = clipTop - clipBottom
-  const unclippedHeight = height * (1 / clippedHeight)
-
-  const geometry = useMemo(() => {
-    if (!data) {
-      return undefined
+  useEffect(() => {
+    workerRef.current = new Worker(
+      new URL("../workers/motif.worker.ts", import.meta.url)
+    )
+    workerRef.current.onmessage = (event: MessageEvent<Geom3>) => {
+      console.log("WebWorker Response => ", event.data)
+      setMotif(event.data)
     }
 
-    const mysurface: Geom3 = translate(
-      [-width / 2, depth / 2, -clipBottom * unclippedHeight],
-      extrudeSurface(
-        {
-          scale: [
-            width / data.width,
-            depth / data.length,
-            (1 / 256) * unclippedHeight,
-          ],
-          smooth: 0,
-          base: 1,
-        },
-        data
-      )
-    )
+    const msg: GenerateMotifMessage = {
+      options: { ...options, heightMap: heightMap },
+    }
 
-    const cutCube = union(
-      translate(
-        [0, 0, -unclippedHeight / 2],
-        cuboid({ size: [width, depth, unclippedHeight] })
-      ),
-      translate(
-        [0, 0, unclippedHeight / 2 + (clipTop - clipBottom) * unclippedHeight],
-        cuboid({ size: [width, depth, unclippedHeight] })
-      )
-    )
+    workerRef.current?.postMessage(msg)
 
-    return translate([0, 0, -height / 2], subtract(mysurface, cutCube))
-  }, [clipBottom, clipTop, data, depth, unclippedHeight, width, height])
+    return () => {
+      workerRef.current?.terminate()
+    }
+  }, [options, heightMap])
 
-  return geometry
+  return motif
 }
