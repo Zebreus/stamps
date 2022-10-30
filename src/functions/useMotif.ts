@@ -14,6 +14,7 @@ export const useHeightMap = (url: string, maxSize: [number, number]) => {
   const maxDepth = maxSize?.[1] || Infinity
 
   useEffect(() => {
+    console.log("img")
     const img = new Image()
     const onload = async () => {
       const canvas = document.createElement("canvas")
@@ -56,10 +57,17 @@ type Options = {
    * a number between 0 and 1
    */
   clipBottom?: number
+  /**
+   * Resolution
+   */
+  resolution?: [number, number]
 }
 
 export const useMotif = (options: Options = {}) => {
-  const heightMap = useHeightMap(options.url ?? "/qr.png", [150, 150])
+  const heightMap = useHeightMap(
+    options.url ?? "/qr.png",
+    options.resolution ?? [150, 150]
+  )
 
   const [motif, setMotif] = useState<Geom3>()
   const workerRef = useRef<Worker>()
@@ -69,7 +77,7 @@ export const useMotif = (options: Options = {}) => {
       new URL("../workers/motif.worker.ts", import.meta.url)
     )
     workerRef.current.onmessage = (event: MessageEvent<Geom3>) => {
-      console.log("WebWorker Response => ", event.data)
+      console.log("Motif Worker Response => ", event.data)
       setMotif(event.data)
     }
 

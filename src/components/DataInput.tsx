@@ -141,13 +141,13 @@ export const DataInput = ({ value, setValue }: DataInputProps) => {
         value={realData.handleRadius}
         setValue={newValue => setValue(d => ({ ...d, handleRadius: newValue }))}
         min={0}
-        max={200}
-        step={1}
+        max={80}
+        step={0.5}
       />
       <NumberInput
         id="handleExponent"
         label="Curvature of the handle middle"
-        unit="mm"
+        unit=""
         value={realData.handleExponent}
         setValue={newValue =>
           setValue(d => ({ ...d, handleExponent: newValue }))
@@ -248,6 +248,16 @@ export const DataInput = ({ value, setValue }: DataInputProps) => {
         min={0}
         max={10}
         step={0.1}
+      />
+      <NumberInput
+        id="motifSize"
+        label="The image will be scaled to this resolution"
+        unit="px"
+        value={realData.motifSize}
+        setValue={newValue => setValue(d => ({ ...d, motifSize: newValue }))}
+        min={5}
+        max={500}
+        step={5}
       />
     </div>
   )

@@ -15,6 +15,8 @@ export type StampOptions = {
   holderRadius?: number
   /** How much bigger then the base the pyramid is */
   pyramidOversize?: number
+  /** The image will be scaled to a square with this side length */
+  motifSize?: number
 
   // Horizontal measurements, ordered from outside to inside
   /** Thickness of the mold holder walls */
@@ -68,6 +70,7 @@ export const getDefaultStampOptions = (options: Partial<StampOptions>) => {
     holderHeight: 40,
     holderRadius: 1.7,
     pyramidOversize: 1,
+    motifSize: 150,
     holderWallSize: 3,
     tolerance: 0.1,
     moldWallThickness: 2,

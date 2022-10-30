@@ -33,39 +33,53 @@ export const Demo = () => {
   const [moldEnabled, setMoldEnabled] = useState(false)
 
   return (
-    <div>
-      <DataInput value={options} setValue={setOptions} />
-      <button className="btn" onClick={() => setStampEnabled(e => !e)}>
-        Toggle stamp
-      </button>
-      <button className="btn" onClick={() => setMoldEnabled(e => !e)}>
-        Toggle mold
-      </button>
-      <button
-        className="btn"
-        onClick={() => solids && downloadGeometry(solids, "mold")}
-      >
-        Download mold
-      </button>
-      <button
-        className="btn"
-        onClick={() => handleSolids && downloadGeometry(handleSolids, "stamp")}
-      >
-        Download stamp
-      </button>
-      <Renderer
-        animate={true}
-        solids={[
-          stampEnabled ? handleSolids : undefined,
-          moldEnabled ? solids : undefined,
-        ]}
-        height={500}
-        width={500}
-        options={{
-          gridOptions: { show: true, ticks: [10] },
-          axisOptions: { show: true },
-        }}
-      />
+    <div className="flex flew-row flex-wrap items-center ">
+      <div className="flex, flex-column">
+        <DataInput value={options} setValue={setOptions} />
+        <div className="flex flex-row gap-2 m-2">
+          <button
+            className="btn btn-primary"
+            onClick={() => setStampEnabled(e => !e)}
+          >
+            {stampEnabled ? "Hide" : "Show"} stamp
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => setMoldEnabled(e => !e)}
+          >
+            {moldEnabled ? "Hide" : "Show"} mold
+          </button>
+          <button
+            className="btn btn-outline"
+            onClick={() => solids && downloadGeometry(solids, "mold")}
+          >
+            Download mold
+          </button>
+          <button
+            className="btn btn-outline"
+            onClick={() =>
+              handleSolids && downloadGeometry(handleSolids, "stamp")
+            }
+          >
+            Download stamp
+          </button>
+        </div>
+      </div>
+      <div className="w-[600px] h-[600px]">
+        <Renderer
+          animate={true}
+          solids={[
+            stampEnabled ? handleSolids : undefined,
+            moldEnabled ? solids : undefined,
+          ]}
+          height={600}
+          width={600}
+          options={{
+            gridOptions: { show: true, ticks: [10] },
+            axisOptions: { show: true },
+          }}
+        />
+      </div>
     </div>
   )
 }

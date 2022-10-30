@@ -12,18 +12,18 @@ export const useMold = (options?: StampOptions) => {
       () => ({
         url: options?.url ?? "/qr.png",
         size: [50, 50, 1],
+        resolution: [options?.motifSize ?? 150, options?.motifSize ?? 150],
       }),
-      [options?.url]
+      [options?.url, options?.motifSize]
     )
   )
 
   useEffect(() => {
-    console.log("worker")
     workerRef.current = new Worker(
       new URL("../workers/mold.worker.ts", import.meta.url)
     )
     workerRef.current.onmessage = (event: MessageEvent<Geom3>) => {
-      console.log("WebWorker Response => ", event.data)
+      console.log("Mold Worker Response => ", event.data)
       setMold(event.data)
     }
 

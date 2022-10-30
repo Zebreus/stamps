@@ -11,7 +11,7 @@ export const useStamp = (options?: StampOptions) => {
       new URL("../workers/stamp.worker.ts", import.meta.url)
     )
     workerRef.current.onmessage = (event: MessageEvent<Geom3>) => {
-      console.log("WebWorker Response => ", event.data)
+      console.log("Stamp Worker Response => ", event.data)
       setStamp(event.data)
     }
     workerRef.current?.postMessage(options)
