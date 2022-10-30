@@ -8,5 +8,6 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  // eslint-disable-next-line import/no-commonjs
+  plugins: [require("daisyui")],
 }

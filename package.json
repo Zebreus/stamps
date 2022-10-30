@@ -61,6 +61,7 @@
     "@jscad/io": "^2.4.3",
     "@jscad/modeling": "^2.10.0",
     "autoprefixer": "^10.4.12",
+    "daisyui": "^2.36.1",
     "image-decode": "^1.2.2",
     "imagetracerjs": "^1.2.6",
     "jscad-react": "^0.1.6",
