@@ -101,7 +101,7 @@ export const DataInput = ({ value, setValue }: DataInputProps) => {
 
   return (
     <div className="">
-      <MyLabel label={"Select motif"} htmlFor={"motifUpload"}>
+      <MyLabel label={"Select motif (png with black and transparency"} htmlFor={"motifUpload"}>
         <input
           id="motifUpload"
           type="file"
