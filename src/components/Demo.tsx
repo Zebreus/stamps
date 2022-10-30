@@ -1,6 +1,8 @@
 // @ts-expect-error: No types available
 import { solidsAsBlob } from "@jscad/io"
 import { Geom3 } from "@jscad/modeling/src/geometries/types"
+import { DataInput } from "components/DataInput"
+import { StampOptions } from "functions/defaultStampOptions"
 import { useMold } from "functions/useMold"
 import { useStamp } from "functions/useStamp"
 import dynamic from "next/dynamic"
@@ -23,29 +25,36 @@ const downloadGeometry = (geometry: Geom3, name: string) => {
 }
 
 export const Demo = () => {
-  const solids = [useMold()]
-  const [[handleSolids]] = [useStamp()]
-  const [stampEnabled, setStampEnabled] = useState(false)
-  const [moldEnabled, setMoldEnabled] = useState(true)
+  const [options, setOptions] = useState<StampOptions>({})
+
+  const solids: Geom3 | undefined = useMold(options)
+  const [[handleSolids]] = [useStamp(options)]
+  const [stampEnabled, setStampEnabled] = useState(true)
+  const [moldEnabled, setMoldEnabled] = useState(false)
 
   return (
     <div>
-      <button onClick={() => setStampEnabled(e => !e)}>Toggle stamp</button>
-      <button onClick={() => setMoldEnabled(e => !e)}>Toggle mold</button>
+      <DataInput value={options} setValue={setOptions} />
+      <button className="btn" onClick={() => setStampEnabled(e => !e)}>
+        Toggle stamp
+      </button>
+      <button className="btn" onClick={() => setMoldEnabled(e => !e)}>
+        Toggle mold
+      </button>
       <button
-        className="border"
-        onClick={() => solids[0] && downloadGeometry(solids[0], "mold")}
+        className="btn"
+        onClick={() => solids && downloadGeometry(solids, "mold")}
       >
         Download mold
       </button>
       <button
-        className="border"
+        className="btn"
         onClick={() => handleSolids && downloadGeometry(handleSolids, "stamp")}
       >
         Download stamp
       </button>
       <Renderer
-        animate={false}
+        animate={true}
         solids={[
           stampEnabled ? handleSolids : undefined,
           moldEnabled ? solids : undefined,
