@@ -63,7 +63,7 @@ jobs:
 
       - name: Build with next
         run: |
-          export GITHUB_PAGES_BASEPATH=${{ steps.configure-pages.outputs.base-path }}
+          export GITHUB_PAGES_BASEPATH="${{ steps.configure-pages.outputs.base_path }}/"
           ${{ steps.detect-package-manager.outputs.runner }} next build
           ${{ steps.detect-package-manager.outputs.runner }} next export -o out
           touch out/.nojekyll
