@@ -63,6 +63,8 @@ jobs:
 
       - name: Build with next
         run: |
+          mv next.config.mjs old.next.config.mjs
+          echo 'import config from "./old.next.config.mjs"; export default {...config, basePath: "${{ steps.configure-pages.outputs.base_path }}/", assetPrefix: "${{ steps.configure-pages.outputs.base_path }}/" }' > next.config.mjs
           export GITHUB_PAGES_BASEPATH="${{ steps.configure-pages.outputs.base_path }}/"
           ${{ steps.detect-package-manager.outputs.runner }} next build
           ${{ steps.detect-package-manager.outputs.runner }} next export -o out
