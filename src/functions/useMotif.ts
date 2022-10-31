@@ -28,11 +28,28 @@ export const useHeightMap = (url: string, maxSize: [number, number]) => {
 
       context?.drawImage(img, 0, 0, width, depth)
 
-      const pixels = context.getImageData(0, 0, width, depth)
+      const pixels = context.getImageData(0, 0, width, depth, {
+        colorSpace: "srgb",
+      })
       const heightMap = {
-        data: [...pixels.data].flatMap((subpixel, index) =>
-          index % 4 === 3 ? [subpixel] : []
-        ),
+        data: [...pixels.data]
+          .flatMap((pixel, index, array) =>
+            index % 4 === 0
+              ? [
+                  {
+                    red: array[index],
+                    green: array[index + 1],
+                    blue: array[index + 2],
+                    alpha: array[index + 3],
+                  },
+                ]
+              : []
+          )
+          .map(
+            pixel =>
+              Math.min(pixel.red ?? 0, pixel.green ?? 0, pixel.blue ?? 0) *
+              (pixel.alpha ?? 1)
+          ),
         width: pixels.width,
         length: pixels.height,
       }
