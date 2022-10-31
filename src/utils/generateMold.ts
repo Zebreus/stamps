@@ -75,7 +75,7 @@ export const generateMold = (
     ...(motif
       ? [
           translate(
-            [0, 0, -(moldHeight / 2) + letterHeight / 2 + moldBottomHeight],
+            [0, 0, -(moldHeight / 2) - letterHeight / 2 + moldBottomHeight],
             scale([motifWidth / 50, motifDepth / 50, letterHeight / 1], motif)
           ),
         ]

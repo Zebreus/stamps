@@ -4432,6 +4432,11 @@ pngjs@^3.3.3:
   resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-3.4.0.tgz#99ca7d725965fb655814eaf65f38f12bbdbf555f"
   integrity sha512-NCrCHhWmnQklfH4MtJMRjZ2a8c80qXeMlQMv2uVp9ISJMTt562SbGd6n2oq0PaPgKm7Z6pL9E2UlLIhC+SHL3w==
 
+poly-partition@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/poly-partition/-/poly-partition-1.0.2.tgz#e188d96d5eab023e2c49df633107828425f314ba"
+  integrity sha512-uUqyuUq1n9wk3ZruUm7LdZiqcJ+RwBf3iPxdPe+kn6U3kn1H8jtH9EKg6I1NDG8pomnnxvuXoTpcusCWyemc2A==
+
 postcss-import@^14.1.0:
   version "14.1.0"
   resolved "https://registry.yarnpkg.com/postcss-import/-/postcss-import-14.1.0.tgz#a7333ffe32f0b8795303ee9e40215dac922781f0"

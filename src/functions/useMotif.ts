@@ -19,20 +19,22 @@ export const useHeightMap = (url: string, maxSize: number) => {
   const maxLength = maxSize || Infinity
 
   useEffect(() => {
-    console.log("img")
     const img = new Image()
     const onload = async () => {
-      const canvas = document.createElement("canvas")
-      const context = canvas.getContext("2d")
       const longerSide = Math.max(img.naturalHeight, img.naturalWidth)
 
       const scalingFactor = Math.min(longerSide, maxLength) / longerSide
       const width = Math.floor(img.naturalWidth * scalingFactor)
       const depth = Math.floor(img.naturalHeight * scalingFactor)
 
+      const canvas = document.createElement("canvas")
+      const context = canvas.getContext("2d")
+
       if (!context) {
         throw new Error("No context")
       }
+      context.canvas.width = width
+      context.canvas.height = depth
 
       context?.drawImage(img, 0, 0, width, depth)
 
@@ -59,8 +61,8 @@ export const useHeightMap = (url: string, maxSize: number) => {
             (1 - Math.min(pixel.red ?? 0, pixel.green ?? 0, pixel.blue ?? 0)) *
             (pixel.alpha ?? 1)
         ),
-        width: pixels.width,
-        length: pixels.height,
+        width: width,
+        length: depth,
       }
       setHeightMap(heightMap)
     }
