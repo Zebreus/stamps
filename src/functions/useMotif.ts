@@ -36,6 +36,8 @@ export const useHeightMap = (url: string, maxSize: number) => {
       context.canvas.width = width
       context.canvas.height = depth
 
+      context.translate(0, canvas.height)
+      context.scale(1, -1)
       context?.drawImage(img, 0, 0, width, depth)
 
       const pixels = context.getImageData(0, 0, width, depth, {
