@@ -3,15 +3,20 @@ import { Vec3 } from "@jscad/modeling/src/maths/types"
 import { useEffect, useRef, useState } from "react"
 import { GenerateMotifMessage } from "workers/motif.worker"
 
-export const useHeightMap = (url: string, maxSize: [number, number]) => {
+/**
+ *
+ * @param url url of the motif. Can be any image
+ * @param maxSize Maximum length of the longer size of the motif
+ * @returns
+ */
+export const useHeightMap = (url: string, maxSize: number) => {
   const [heightMap, setHeightMap] = useState<{
     width: number
     length: number
     data: number[]
   }>()
 
-  const maxWidth = maxSize?.[0] || Infinity
-  const maxDepth = maxSize?.[1] || Infinity
+  const maxLength = maxSize || Infinity
 
   useEffect(() => {
     console.log("img")
@@ -19,8 +24,11 @@ export const useHeightMap = (url: string, maxSize: [number, number]) => {
     const onload = async () => {
       const canvas = document.createElement("canvas")
       const context = canvas.getContext("2d")
-      const width = Math.min(img.naturalWidth, maxWidth)
-      const depth = Math.min(img.naturalHeight, maxDepth)
+      const longerSide = Math.max(img.naturalHeight, img.naturalWidth)
+
+      const scalingFactor = Math.min(longerSide, maxLength) / longerSide
+      const width = Math.floor(img.naturalWidth * scalingFactor)
+      const depth = Math.floor(img.naturalHeight * scalingFactor)
 
       if (!context) {
         throw new Error("No context")
@@ -31,25 +39,26 @@ export const useHeightMap = (url: string, maxSize: [number, number]) => {
       const pixels = context.getImageData(0, 0, width, depth, {
         colorSpace: "srgb",
       })
+
+      const pixelObjects = [...pixels.data].flatMap((pixel, index, array) =>
+        index % 4 === 0
+          ? [
+              {
+                red: array[index],
+                green: array[index + 1],
+                blue: array[index + 2],
+                alpha: array[index + 3],
+              },
+            ]
+          : []
+      )
+
       const heightMap = {
-        data: [...pixels.data]
-          .flatMap((pixel, index, array) =>
-            index % 4 === 0
-              ? [
-                  {
-                    red: array[index],
-                    green: array[index + 1],
-                    blue: array[index + 2],
-                    alpha: array[index + 3],
-                  },
-                ]
-              : []
-          )
-          .map(
-            pixel =>
-              Math.min(pixel.red ?? 0, pixel.green ?? 0, pixel.blue ?? 0) *
-              (pixel.alpha ?? 1)
-          ),
+        data: pixelObjects.map(
+          pixel =>
+            (1 - Math.min(pixel.red ?? 0, pixel.green ?? 0, pixel.blue ?? 0)) *
+            (pixel.alpha ?? 1)
+        ),
         width: pixels.width,
         length: pixels.height,
       }
@@ -57,7 +66,7 @@ export const useHeightMap = (url: string, maxSize: [number, number]) => {
     }
     img.onload = onload
     img.src = url
-  }, [maxDepth, maxWidth, url])
+  }, [maxLength, url])
 
   return heightMap
 }
@@ -77,13 +86,13 @@ type Options = {
   /**
    * Resolution
    */
-  resolution?: [number, number]
+  resolution?: number
 }
 
 export const useMotif = (options: Options = {}) => {
   const heightMap = useHeightMap(
     options.url ?? "/qr.png",
-    options.resolution ?? [150, 150]
+    options.resolution ?? 150
   )
 
   const [motif, setMotif] = useState<Geom3>()
@@ -109,5 +118,8 @@ export const useMotif = (options: Options = {}) => {
     }
   }, [options, heightMap])
 
-  return motif
+  return {
+    motif,
+    naturalAspect: (heightMap?.width ?? 1) / (heightMap?.length ?? 1),
+  }
 }

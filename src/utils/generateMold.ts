@@ -14,7 +14,8 @@ import {
 
 export const generateMold = (
   options: StampOptions,
-  motif: Geom3 | undefined
+  motif: Geom3 | undefined,
+  naturalAspect: number
 ) => {
   const stampOptions = getDefaultStampOptions(options ?? {})
   const {
@@ -66,13 +67,16 @@ export const generateMold = (
     )
   )
 
+  const motifDepth = Math.min(depth, width / naturalAspect)
+  const motifWidth = Math.min(width, depth * naturalAspect)
+
   return subtract(
     thing,
     ...(motif
       ? [
           translate(
             [0, 0, -(moldHeight / 2) + letterHeight / 2 + moldBottomHeight],
-            scale([width / 50, depth / 50, letterHeight / 1], motif)
+            scale([motifWidth / 50, motifDepth / 50, letterHeight / 1], motif)
           ),
         ]
       : [])

@@ -7,12 +7,12 @@ import { GenerateMoldMessage } from "workers/mold.worker"
 export const useMold = (options?: StampOptions) => {
   const [mold, setMold] = useState<Geom3>()
   const workerRef = useRef<Worker>()
-  const motif = useMotif(
+  const { motif, naturalAspect } = useMotif(
     useMemo(
       () => ({
         url: options?.url ?? "/qr.png",
         size: [50, 50, 1],
-        resolution: [options?.motifSize ?? 150, options?.motifSize ?? 150],
+        resolution: options?.motifSize ?? 150,
       }),
       [options?.url, options?.motifSize]
     )
@@ -30,6 +30,7 @@ export const useMold = (options?: StampOptions) => {
     const msg: GenerateMoldMessage = {
       stampOptions: options ?? {},
       motif: motif,
+      naturalAspect: naturalAspect,
     }
 
     workerRef.current?.postMessage(msg)
@@ -37,7 +38,7 @@ export const useMold = (options?: StampOptions) => {
     return () => {
       workerRef.current?.terminate()
     }
-  }, [options, motif])
+  }, [options, motif, naturalAspect])
 
   return mold
 }
