@@ -181,6 +181,8 @@ export const generateStamp = (options?: StampOptions) => {
     holderHeight,
     width,
     depth,
+    handleRadius,
+    stampHeight,
   } = stampOptions
 
   const grippyThingSize = 6
@@ -221,7 +223,7 @@ export const generateStamp = (options?: StampOptions) => {
     subtract(
       generateHandle(options),
       translate(
-        [0, 0, holderHeight],
+        [0, 0, stampHeight - handleRadius],
         rotate(
           [Math.PI / 4, 0, 0],
           cuboid({ size: [interfaceWidth, holderRadius * 2, holderRadius * 2] })
