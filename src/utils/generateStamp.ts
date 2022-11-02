@@ -178,7 +178,6 @@ export const generateStamp = (options?: StampOptions) => {
     interfaceHeight,
     interfaceWidth,
     holderRadius,
-    holderHeight,
     width,
     depth,
     handleRadius,
