@@ -48,10 +48,10 @@ export const useHeightMap = (url: string, maxSize: number) => {
         index % 4 === 0
           ? [
               {
-                red: array[index],
-                green: array[index + 1],
-                blue: array[index + 2],
-                alpha: array[index + 3],
+                red: array[index] / 255,
+                green: array[index + 1] / 255,
+                blue: array[index + 2] / 255,
+                alpha: array[index + 3] / 255,
               },
             ]
           : []

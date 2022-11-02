@@ -117,7 +117,6 @@ const blockMapPoly = (data: (0 | 1)[], width: number, height: number) => {
   const geometry = shapesWithHoles.map(({ shape, holes }) =>
     shapeToPolyhedron(shape, holes)
   )
-
   return union(geometry)
 }
 
@@ -146,7 +145,7 @@ export const generateMotif = ({
   const clippedHeightMap = data && {
     ...data,
     data: data.data.map(value => {
-      const normalizedValue = value / 255
+      const normalizedValue = value
       if (normalizedValue > clipTop) return 1
       if (normalizedValue < clipBottom) return 0
       return 1
